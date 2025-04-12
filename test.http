@@ -1,0 +1,45 @@
+### Categories ALL
+GET http://localhost:3000/api/v1/categories
+Accept: application/json
+X-API-KEY: RAHASIA
+
+
+### created Category
+POST http://localhost:3000/api/v1/categories
+Accept: application/json
+Content-Type: application/json
+# X-API-KEY: RAHASIA
+
+{
+    "name": "L"
+}
+
+
+
+### cetegory by id
+GET http://localhost:3000/api/v1/categories/5
+Accept: application/json
+X-API-KEY: RAHASIA
+
+
+
+### update cetegory by id
+PUT http://localhost:3000/api/v1/categories/3
+Accept: application/json
+Content-Type: application/json
+X-API-KEY: RAHASIA
+
+{
+    "name": "I"
+}
+
+
+
+### Delete by id
+DELETE http://localhost:3000/api/v1/categories/19
+Accept: application/json
+X-API-KEY: RAHASIA
+
+
+
+
