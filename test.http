@@ -8,10 +8,10 @@ X-API-KEY: RAHASIA
 POST http://localhost:3000/api/v1/categories
 Accept: application/json
 Content-Type: application/json
-# X-API-KEY: RAHASIA
+X-API-KEY: RAHASIA
 
 {
-    "name": "L"
+    "name": ""
 }
 
 

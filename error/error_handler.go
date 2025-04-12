@@ -1,7 +1,9 @@
 package error
 
 import (
+	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/abdultalif/restful-api/helper"
 	"github.com/abdultalif/restful-api/model/web"
@@ -26,14 +28,39 @@ func badRequestError(writer http.ResponseWriter, request *http.Request, err inte
 		writer.Header().Add("Content-Type", "application/json")
 		writer.WriteHeader(http.StatusBadRequest)
 
-		WebResponseFailed := web.WebResponseFailed{
-			Success: false,
-			Code:    http.StatusBadRequest,
-			Status: "BAD REQUEST",
-			Error:   exception.Error(),
-		}
+        errors := make(map[string]interface{})
+        for _, e := range exception {
+            field := e.Field()
 
-		helper.WriteToResponseBody(writer, WebResponseFailed)
+            fieldName := strings.ToLower(field[strings.LastIndex(field, ".")+1:])
+            
+            if _, ok := errors[fieldName]; !ok {
+                errors[fieldName] = make([]string, 0)
+            }
+            
+            var message string
+            switch e.Tag() {
+            case "required":
+                message = "This field is required"
+            case "min":
+                message = fmt.Sprintf("Minimum length is %s", e.Param())
+            case "max":
+                message = fmt.Sprintf("Maximum length is %s", e.Param())
+            default:
+                message = fmt.Sprintf("Field validation failed on '%s' tag", e.Tag())
+            }
+            
+            errors[fieldName] = append(errors[fieldName].([]string), message)
+        }
+
+        errorResponse := web.WebResponseFailed{
+            Success: false,
+            Code:    http.StatusBadRequest,
+            Status:  "BAD REQUEST",
+            Error:   errors,
+        }
+
+		helper.WriteToResponseBody(writer, errorResponse)
 		return true
 	} else {
 		return false
